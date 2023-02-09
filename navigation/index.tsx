@@ -14,17 +14,25 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../views/ModalScreen';
 import NotFoundScreen from '../views/NotFoundScreen';
-import TabOneScreen from '../views/TabOneScreen';
 import TabTwoScreen from '../views/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
+import HomeScreen from '../views/HomeScreen';
+import Authorization from '../auth';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  const user = true;
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <RootNavigator />
+     {
+        user ? (
+          <RootNavigator />
+        ) : (
+          <Authorization/>
+        )
+     }
     </NavigationContainer>
   );
 }
@@ -58,16 +66,31 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
-      }}>
+      initialRouteName="Home"
+      screenOptions={
+        ({ route }) => ({
+          tabBarIcon: ({ color, size } : any) => {
+            let iconName: any;
+
+            if (route.name === 'Home') {
+              iconName = 'home';
+            } else if (route.name === 'Trending') {
+              iconName = 'fire';
+            } else if (route.name === 'Favourites') {
+              iconName = 'heart';
+            } else if (route.name === 'Profile') {
+              iconName = 'cog';
+            }
+            return <FontAwesome name={iconName} size={size} color={color} />;
+          }
+
+        } as any)
+        }>
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Tab One',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        name="Home"
+        component={HomeScreen}
+        options={({ navigation }: RootTabScreenProps<'Home'>) => ({
+          title: 'Home',
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate('Modal')}
@@ -75,7 +98,7 @@ function BottomTabNavigator() {
                 opacity: pressed ? 0.5 : 1,
               })}>
               <FontAwesome
-                name="info-circle"
+                name="user"
                 size={25}
                 color={Colors[colorScheme].text}
                 style={{ marginRight: 15 }}
@@ -84,24 +107,28 @@ function BottomTabNavigator() {
           ),
         })}
       />
-      <BottomTab.Screen
-        name="TabTwo"
+          <BottomTab.Screen
+        name="Favourites"
         component={TabTwoScreen}
         options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: 'Favourites',
         }}
       />
+      <BottomTab.Screen
+        name="Trending"
+        component={TabTwoScreen}
+        options={{
+          title: 'Trending',
+        }}
+      />
+      <BottomTab.Screen
+        name="Profile"
+        component={TabTwoScreen}
+        options={{
+          title: 'Profile',
+        }}
+      />
+  
     </BottomTab.Navigator>
   );
-}
-
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }
