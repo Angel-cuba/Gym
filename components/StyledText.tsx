@@ -36,7 +36,7 @@ export const BigText = ({
     <Text style={[
       big && { fontSize: 40 },
       bold && { fontWeight: 'bold' },
-      color === 'login' ? { color: '#ff0000' } : { color: '#000' }
+      color === 'login' ? { color: '#ff0000' } : { color: '#0c017d' }
     ]}>
       {children}
     </Text>

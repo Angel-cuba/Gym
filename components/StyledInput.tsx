@@ -3,20 +3,22 @@ import React from 'react';
 import { StyledText } from './StyledText';
 
 type CustomInputProps = {
+  type?: string;
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
   label: string;
+  color?: string;
 };
 
-const CustomInput = ({ placeholder, value, onChangeText, label }: CustomInputProps) => {
+const CustomInput = ({ placeholder, value, onChangeText, label, color }: CustomInputProps) => {
   return (
     <View style={{ width: '100%', alignItems: 'center' }}>
       <StyledText
         big
         bold
         style={{
-          color: 'grey',
+          color: color === 'login' ? '#ff0000' : color === 'register' ? '#0c017d' : '#ffffff',
         }}
       >
         {label}
@@ -26,6 +28,7 @@ const CustomInput = ({ placeholder, value, onChangeText, label }: CustomInputPro
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
+        cursorColor="#ff0000"
       />
     </View>
   );
@@ -38,11 +41,10 @@ const styles = StyleSheet.create({
     width: '90%',
     margin: 12,
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.15)',
-    borderTopColor: 'rgba(0,0,0,0.05)',
-    borderRightColor: 'rgba(0,0,0,0.05)',
+    borderColor: 'rgba(153, 153, 153, 0.5)',
     borderRadius: 10,
-    padding: 10,
-    color: 'black',
+    padding: 8,
+    color: '#ffffff',
+    fontSize: 20,
   },
 });

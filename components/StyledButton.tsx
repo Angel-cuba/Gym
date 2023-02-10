@@ -27,9 +27,9 @@ export default CustomButton;
 
 const styles = StyleSheet.create({
   button: {
+    width: '90%',
     paddingVertical: 15,
-    paddingHorizontal: 20,
-    elevation: 6,
+    elevation: 6
   },
   textField: {
     color: '#fff',
