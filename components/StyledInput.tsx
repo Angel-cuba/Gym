@@ -1,20 +1,33 @@
-import { TextInput, StyleSheet } from 'react-native';
+import { TextInput, StyleSheet, View, Text } from 'react-native';
 import React from 'react';
+import { StyledText } from './StyledText';
 
 type CustomInputProps = {
   placeholder: string;
   value: string;
   onChangeText: (text: string) => void;
+  label: string;
 };
 
-const CustomInput = ({ placeholder, value, onChangeText, ...props }: CustomInputProps) => {
+const CustomInput = ({ placeholder, value, onChangeText, label }: CustomInputProps) => {
   return (
-    <TextInput
-      style={styles.input}
-      placeholder={placeholder}
-      value={value}
-      onChangeText={onChangeText}
-    />
+    <View style={{ width: '100%', alignItems: 'center' }}>
+      <StyledText
+        big
+        bold
+        style={{
+          color: 'grey',
+        }}
+      >
+        {label}
+      </StyledText>
+      <TextInput
+        style={styles.input}
+        placeholder={placeholder}
+        value={value}
+        onChangeText={onChangeText}
+      />
+    </View>
   );
 };
 
