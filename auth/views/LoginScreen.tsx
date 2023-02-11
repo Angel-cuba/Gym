@@ -4,17 +4,36 @@ import { BigText } from '../../components/StyledText';
 import CustomInput from '../../components/StyledInput';
 import CustomButton from '../../components/StyledButton';
 import Separator from '../../components/Separator';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { app } from '../../firebase';
 
 export default function LoginScreen({ navigation }: any) {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
 
+  const auth = getAuth(app);
+
   const goToSignUp = () => {
     navigation.navigate('Register');
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    await signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        navigation.navigate('Authorization', { screen: 'Home', params: { user } });
+
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+
     console.log('submit');
+    console.log(email, password);
   };
 
   const imageUrlFromCloudinary =
@@ -39,6 +58,7 @@ export default function LoginScreen({ navigation }: any) {
               value={email}
               onChangeText={setEmail}
               color="login"
+              right={false}
             />
             <CustomInput
               type="password"
@@ -47,6 +67,8 @@ export default function LoginScreen({ navigation }: any) {
               value={password}
               onChangeText={setPassword}
               color="login"
+              right={true}
+              secureTextEntry
             />
           </View>
           <Pressable style={styles.signup} onPress={goToSignUp}>
