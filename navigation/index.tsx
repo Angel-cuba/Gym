@@ -21,13 +21,17 @@ import { getAuth, onAuthStateChanged } from 'firebase/auth';
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const [user, setUser] = React.useState(null);
   const auth = getAuth();
-  onAuthStateChanged(auth, (user: any) => {
-    if (user) {
-      setUser(user);
-    } else {
-      setUser(null);
-    }
-  });
+React.useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user: any) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return unsubscribe;
+}, []);
 
   return (
     <NavigationContainer
