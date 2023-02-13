@@ -2,7 +2,6 @@ import { StyleSheet, View, Text, Pressable } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import React from 'react';
 import { StyledText } from './StyledText';
-import { FontAwesome } from '@expo/vector-icons';
 
 type CustomInputProps = {
   type?: string;
@@ -14,6 +13,7 @@ type CustomInputProps = {
   color?: string;
   secureTextEntry?: boolean;
   right?: boolean;
+  underlineColor?: string;
 };
 
 const CustomInput = ({
@@ -24,8 +24,7 @@ const CustomInput = ({
   label,
   color,
   secureTextEntry,
-  right,
-}: CustomInputProps) => {
+  right}: CustomInputProps) => {
   const [passwordVisible, setPasswordVisible] = React.useState(true);
   return (
     <View style={{ width: '100%', alignItems: 'center' }}>
@@ -52,13 +51,8 @@ const CustomInput = ({
             onPress={() => setPasswordVisible(!passwordVisible)}
           />
         }
+        underlineColor='transparent'
       />
-      {/* <Pressable>
-        <FontAwesome
-          name={passwordVisible ? 'eye' : 'eye-slash'}
-          onPress={() => setPasswordVisible(!passwordVisible)}
-        />
-      </Pressable> */}
     </View>
   );
 };
@@ -69,11 +63,12 @@ const styles = StyleSheet.create({
   input: {
     width: '90%',
     margin: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(153, 153, 153, 0.5)',
-    borderRadius: 10,
-    padding: 8,
-    color: '#ffffff',
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    color: '#d3d3d3bd',
     fontSize: 20,
+    underlineColor: 'transparent',
   },
 });
