@@ -31,9 +31,9 @@ const CustomInput = ({
       <StyledText
         big
         bold
-        style={{
-          color: color === 'login' ? '#ff0000' : color === 'register' ? '#0c017d' : '#ffffff',
-        }}
+        style={[styles.text,{
+          color: color === 'login' ? '#ff0000' : color === 'register' ? '#0c017d' : '#3b3b3b',
+        }]}
       >
         {label}
       </StyledText>
@@ -52,6 +52,8 @@ const CustomInput = ({
           />
         }
         underlineColor='transparent'
+        activeUnderlineColor='transparent'
+
       />
     </View>
   );
@@ -60,6 +62,13 @@ const CustomInput = ({
 export default CustomInput;
 
 const styles = StyleSheet.create({
+  text: {
+    fontSize: 20,
+    position: 'absolute',
+    top: -10,
+    right: 30,
+    zIndex: 1,
+  },
   input: {
     width: '90%',
     margin: 12,
