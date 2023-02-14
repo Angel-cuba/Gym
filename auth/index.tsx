@@ -9,7 +9,6 @@ const Stack = createNativeStackNavigator<AuthorizationParamList>();
 
 export default function Authorization() {
   return (
-    // <LoginScreen/>
     <Stack.Navigator
       screenOptions={{
         headerShown: false,

@@ -3,7 +3,7 @@ import React from 'react';
 import { BigText } from '../../components/StyledText';
 import CustomInput from '../../components/StyledInput';
 import CustomButton from '../../components/StyledButton';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 export default function SignUpScreen({ navigation }: any) {
   const [name, setName] = React.useState('');
@@ -20,12 +20,13 @@ export default function SignUpScreen({ navigation }: any) {
       setError('Passwords do not match');
       return;
     }
-    setLoading(true);
+  if(email !== '' && email !== null && password !== '' && password !== null){
+      setLoading(true);
     await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in
+        // Signed i
         const user = userCredential.user;
-        navigation.navigate('HomeNavigator', { screen: 'Authorization', params: { user } });
+        navigation.navigate('Authorization', { screen: 'Home', params: { user }});
         // ...
       })
       .catch((error) => {
@@ -34,6 +35,8 @@ export default function SignUpScreen({ navigation }: any) {
         console.log(errorCode, errorMessage);
         // ..
       });
+    setLoading(false);
+  }
   };
 
   const goToLogin = () => {
@@ -42,7 +45,12 @@ export default function SignUpScreen({ navigation }: any) {
 
   return (
     <View style={styles.container}>
-      <BigText big bold color="regiter">
+      {
+        loading ? (
+          <Text>Loading...</Text>
+        ) : (
+          <>
+          <BigText big bold color="regiter">
         Register
       </BigText>
       <View style={styles.inputsView}>
@@ -88,6 +96,10 @@ export default function SignUpScreen({ navigation }: any) {
           onPress={handleSubmit}
         />
       </View>
+          </>
+        )
+
+      }
     </View>
   );
 }
