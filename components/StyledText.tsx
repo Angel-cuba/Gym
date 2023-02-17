@@ -1,6 +1,7 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 
+
 type StyledTextProps = {
   children: React.ReactNode;
   style?: any;
@@ -16,10 +17,11 @@ export const StyledText = ({
   small,
   big,
   bold,
+  color,
   ...props
 }: StyledTextProps) => {
   return (
-    <Text style={[style, small && { fontSize: 12 }, big && { fontSize: 20 }, bold && { fontWeight: 'bold' }]} {...props}>
+    <Text style={[style, small && { fontSize: 12 }, big && { fontSize: 20 }, bold && { fontWeight: 'bold'}, color === 'part' ? {color: '#000'} : {color: 'grey'}]} {...props}>
       {children}
     </Text>
   )
