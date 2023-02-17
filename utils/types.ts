@@ -8,3 +8,12 @@ export type CustomButtonProps = {
   margin?: number;
   padding?: number;
 };
+// Data of single BodyPart
+export type BodyPart = {
+  id?: number;
+  name: string;
+  image: string;
+  equipment: string;
+  bodyPart: string;
+  target: string;
+};
