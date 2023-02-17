@@ -4,7 +4,7 @@ import { BigText } from '../../components/StyledText';
 import CustomInput from '../../components/StyledInput';
 import CustomButton from '../../components/StyledButton';
 import Separator from '../../components/Separator';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { app } from '../../firebase';
 
 export default function LoginScreen({ navigation }: any) {
@@ -31,6 +31,7 @@ export default function LoginScreen({ navigation }: any) {
         const errorCode = error.code;
         const errorMessage = error.message;
         // ..
+        console.log('error', errorCode, errorMessage)
       });
 
     console.log('submit');
@@ -41,7 +42,6 @@ export default function LoginScreen({ navigation }: any) {
     'https://res.cloudinary.com/dqaerysgb/image/upload/v1673656213/Random/main_bg_mab3uj.jpg';
 
   return (
-    // <SafeAreaView>
     <View style={styles.container}>
       <ImageBackground
         source={{ uri: imageUrlFromCloudinary }}
@@ -91,8 +91,6 @@ export default function LoginScreen({ navigation }: any) {
         </View>
       </ImageBackground>
     </View>
-
-    // {/* </SafeAreaView> */}
   );
 }
 
