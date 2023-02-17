@@ -1,16 +1,8 @@
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
+import { CustomButtonProps } from '../utils/types';
 
-type CustomButtonProps = {
-  label: string;
-  onPress: () => void;
-  radius?: number;
-  fontSize?: number;
-  backgroundColor?: string;
-  width?: string;
-  margin?: number;
-  padding?: number;
-};
+
 
 const CustomButton = ({ label, onPress, radius, fontSize, backgroundColor, margin, width, padding }: CustomButtonProps) => {
   return (
