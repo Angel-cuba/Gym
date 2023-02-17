@@ -17,6 +17,7 @@ import FavouritesScreen from '../views/Favourites';
 import TrendingScreen from '../views/Trending';
 import ProfileScreen from '../views/Profile';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import ModalById from '../views/components/Home/ModalById';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const [user, setUser] = React.useState(null);
@@ -74,6 +75,7 @@ function HomeNavigator() {
       />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen name="ModalById" component={ModalById} />
       </Stack.Group>
     </Stack.Navigator>
   );

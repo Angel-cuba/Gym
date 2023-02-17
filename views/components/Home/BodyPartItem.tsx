@@ -1,10 +1,14 @@
 import { View, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import React from 'react';
 import { StyledText } from '../../../components/StyledText';
+import { useNavigation } from '@react-navigation/native';
 
 export default function BodyPartItem({ item }: any) {
+
+  const navigation = useNavigation();
   const goToBodyPart = (id: any) => {
     console.log(id, item);
+    navigation.navigate('ModalById', { id, item }as any);
   };
   return (
     <TouchableOpacity style={styles.button} onPress={() => goToBodyPart(item.id)}>
