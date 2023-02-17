@@ -1,14 +1,113 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '../components/EditScreenInfo';
+import { getAuth, signOut } from 'firebase/auth';
+import React from 'react';
+import { Dimensions, FlatList, StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
 import { StyledText } from '../components/StyledText';
 import { Text, View } from '../components/Themed';
+import { app } from '../firebase';
 import { RootTabScreenProps } from '../types';
+import { BodyPart } from '../utils/types';
+import BodyPartItem from './components/Home/BodyPartItem';
+import ButtonParts from './components/Home/ButtonParts';
 
-export default function HomeScreen({ navigation }: RootTabScreenProps<'Home'>) {
+// Url and options for the fetch request
+const optionsUrl = {
+  method: 'GET',
+  headers: {
+    'X-RapidAPI-Key': 'bae6f426f5msh285e366f58bc062p1884cdjsn719f1d588f94',
+    'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
+  },
+};
+const urlToFetch = 'https://exercisedb.p.rapidapi.com/exercises';
+const urlBodyParts = 'https://exercisedb.p.rapidapi.com/exercises/bodyPartList';
+const urlBodyPartsToFetch = 'https://exercisedb.p.rapidapi.com/exercises/bodyPart/';
+
+export default function HomeScreen({ route }: RootTabScreenProps<'Home'>) {
+  const user: any = route?.params;
+  console.log('home screen', route.params);
+  // const { email, uid } = user;
+  // console.log('email and uid',email, uid);
+
+  const auth = getAuth(app);
+  const goOut = () => {
+    console.log('go out');
+    signOut(auth);
+  };
+
+  const [bodyPartsData, setBodyPartsData] = React.useState<any>();
+  const [bodyParts, setBodyParts] = React.useState<any>('back');
+  console.log('body parts', bodyParts);
+  const [gymData, setGymData] = React.useState<any>([]);
+  const [url, setUrl] = React.useState<any>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(false);
+
+  const screenWidth = Math.round(Dimensions.get('window').width);
+  const screenHeight = Math.round(Dimensions.get('window').height);
+
+  const fetchingData = async (url: string, options: any) => {
+    try {
+      const response = await fetch(url, options);
+      return response.json();
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchingData(urlBodyParts, optionsUrl).then((data) => {
+      setBodyPartsData(data);
+      console.log('body parts', data);
+      setLoading(false);
+    });
+    fetchingData(`${urlBodyPartsToFetch}${bodyParts}`, optionsUrl).then((data) => {
+      // setData(data);
+      // setLoading(false);
+      console.log('data', data);
+      setGymData(data);
+    });
+  }, [bodyParts]);
+
+  if (loading) return <Text>Loading...</Text>;
+
   return (
     <View style={styles.container}>
-      <StyledText big bold>Home</StyledText>
+      <Button onPress={goOut}>Log out</Button>
+      <View
+        style={{
+          flexDirection: 'row',
+        }}
+      >
+        <FlatList
+          data={bodyPartsData}
+          renderItem={({ item }) => (
+            <ButtonParts item={item} bodyPart={bodyParts} setBodyPart={setBodyParts} />
+          )}
+          keyExtractor={(item) => item}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+      <StyledText color="part" bold>
+        We got {gymData.length} differents exercises for you!
+      </StyledText>
+      <View
+        style={{
+          flexDirection: 'row',
+        }}
+      >
+        <View
+          style={[styles.bodypart, { width: screenWidth, height: screenHeight - 200 }]}
+        >
+          <FlatList
+            data={gymData}
+            renderItem={({ item }) => <BodyPartItem item={item as BodyPart} />}
+            keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+            numColumns={2}
+          />
+        </View>
+      </View>
     </View>
   );
 }
@@ -17,15 +116,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
   },
   separator: {
     marginVertical: 30,
     height: 1,
     width: '80%',
+  },
+  bodypart: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 55, 81, 0.022)',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 5,
   },
 });
