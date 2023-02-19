@@ -11,16 +11,10 @@ import BodyPartItem from './components/Home/BodyPartItem';
 import ButtonParts from './components/Home/ButtonParts';
 
 // Url and options for the fetch request
-const optionsUrl = {
-  method: 'GET',
-  headers: {
-    'X-RapidAPI-Key': 'bae6f426f5msh285e366f58bc062p1884cdjsn719f1d588f94',
-    'X-RapidAPI-Host': 'exercisedb.p.rapidapi.com',
-  },
-};
-const urlToFetch = 'https://exercisedb.p.rapidapi.com/exercises';
-const urlBodyParts = 'https://exercisedb.p.rapidapi.com/exercises/bodyPartList';
-const urlBodyPartsToFetch = 'https://exercisedb.p.rapidapi.com/exercises/bodyPart/';
+import { fetchingData, optionsUrl, urlBodyParts, urlBodyPartsToFetch } from '../utils/queries';
+import Loading from '../components/Loading';
+
+
 
 export default function HomeScreen({ route }: RootTabScreenProps<'Home'>) {
   const user: any = route?.params;
@@ -38,27 +32,19 @@ export default function HomeScreen({ route }: RootTabScreenProps<'Home'>) {
   const [bodyParts, setBodyParts] = React.useState<any>('back');
   console.log('body parts', bodyParts);
   const [gymData, setGymData] = React.useState<any>([]);
-  const [url, setUrl] = React.useState<any>([]);
   const [loading, setLoading] = React.useState(true);
+  //TODO: add error state
   const [error, setError] = React.useState(false);
 
   const screenWidth = Math.round(Dimensions.get('window').width);
   const screenHeight = Math.round(Dimensions.get('window').height);
 
-  const fetchingData = async (url: string, options: any) => {
-    try {
-      const response = await fetch(url, options);
-      return response.json();
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
+ 
 
   React.useEffect(() => {
     fetchingData(urlBodyParts, optionsUrl).then((data) => {
       setBodyPartsData(data);
-      console.log('body parts', data);
-      setLoading(false);
+      // setLoading(false);
     });
     fetchingData(`${urlBodyPartsToFetch}${bodyParts}`, optionsUrl).then((data) => {
       // setData(data);
@@ -68,7 +54,7 @@ export default function HomeScreen({ route }: RootTabScreenProps<'Home'>) {
     });
   }, [bodyParts]);
 
-  if (loading) return <Text>Loading...</Text>;
+  if (loading) return <Loading/>;
 
   return (
     <View style={styles.container}>
@@ -89,7 +75,11 @@ export default function HomeScreen({ route }: RootTabScreenProps<'Home'>) {
         />
       </View>
       <StyledText color="part" bold>
-        We got {gymData.length} differents exercises for you!
+        {
+          gymData.lenght > 0
+            ? `We got ${gymData.length} differents exercises for you!`
+            : 'No exercises found'
+        }
       </StyledText>
       <View
         style={{
