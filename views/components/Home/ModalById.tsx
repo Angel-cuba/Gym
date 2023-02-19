@@ -2,13 +2,42 @@ import { View, Text, SafeAreaView, ScrollView, Image, Dimensions, StyleSheet } f
 import React from 'react';
 import { BigText, StyledText } from '../../../components/StyledText';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+// Firebase
+import { getFirestore, collection, getDocs, addDoc, doc, setDoc } from 'firebase/firestore';
+import { app } from '../../../firebase';
+import { getAuth } from 'firebase/auth';
 
 export default function ModalById({ route, navigation }: any) {
   const { id, item } = route.params;
   const width = Math.round(Dimensions.get('window').width);
   const height = Math.round(Dimensions.get('window').height);
+
+  //Get user id from firebase
+  const user = getAuth().currentUser;
+  const userId = user?.uid;
+
   const addItemToWishList = () => {
     console.log('add to wish list', id);
+  };
+
+  //! Firebase config to add to wish list
+  const db = getFirestore(app);
+
+  const addWishList = async () => {
+    try {
+      //? Add a new document with a generated id.
+      // const docRef = await addDoc(collection(db, 'favourites'), {
+      //   userUid: userId,
+      //   selected: id
+      // });
+      // console.log('Document written with ID: ', docRef.id);
+      
+      //? Get all documents from a collection
+      const dataFromFirebase =  (await getDocs(collection(db, 'favourites'))).docs.map((doc) => doc.data());
+      console.log('data from firebase', dataFromFirebase);
+    } catch (e) {
+      console.error('Error adding document: ', e);
+    }
   };
   return (
     <SafeAreaView
@@ -49,7 +78,7 @@ export default function ModalById({ route, navigation }: any) {
               name="heart-outline"
               size={24}
               color="#000000"
-              onPress={() => addItemToWishList()}
+              onPress={() => addWishList()}
             />
           </View>
       <ScrollView>
@@ -102,7 +131,6 @@ export default function ModalById({ route, navigation }: any) {
           <StyledText
             style={{
               marginVertical: 10,
-              // marginLeft: 20,
               backgroundColor: '#0000007qf',
               textAlign: 'center',
               padding: 10,
