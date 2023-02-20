@@ -3,7 +3,7 @@ import React from 'react';
 import { Dimensions, FlatList, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { StyledText } from '../components/StyledText';
-import { Text, View } from '../components/Themed';
+import { View } from '../components/Themed';
 import { app } from '../firebase';
 import { RootTabScreenProps } from '../types';
 import { BodyPart } from '../utils/types';
@@ -16,11 +16,7 @@ import Loading from '../components/Loading';
 
 
 
-export default function HomeScreen({ route }: RootTabScreenProps<'Home'>) {
-  const user: any = route?.params;
-  console.log('home screen', route.params);
-  // const { email, uid } = user;
-  // console.log('email and uid',email, uid);
+export default function HomeScreen() {
 
   const auth = getAuth(app);
   const goOut = () => {
@@ -30,9 +26,8 @@ export default function HomeScreen({ route }: RootTabScreenProps<'Home'>) {
 
   const [bodyPartsData, setBodyPartsData] = React.useState<any>();
   const [bodyParts, setBodyParts] = React.useState<any>('back');
-  console.log('body parts', bodyParts);
   const [gymData, setGymData] = React.useState<any>([]);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   //TODO: add error state
   const [error, setError] = React.useState(false);
 
@@ -44,12 +39,9 @@ export default function HomeScreen({ route }: RootTabScreenProps<'Home'>) {
   React.useEffect(() => {
     fetchingData(urlBodyParts, optionsUrl).then((data) => {
       setBodyPartsData(data);
-      // setLoading(false);
+      setLoading(false);
     });
     fetchingData(`${urlBodyPartsToFetch}${bodyParts}`, optionsUrl).then((data) => {
-      // setData(data);
-      // setLoading(false);
-      console.log('data', data);
       setGymData(data);
     });
   }, [bodyParts]);
