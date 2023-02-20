@@ -1,19 +1,23 @@
 import { getAuth } from 'firebase/auth';
 import { collection, getDocs, getFirestore } from 'firebase/firestore';
 import React from 'react';
-import { StyleSheet, Image, Dimensions } from 'react-native';
+import { Image, Dimensions, ScrollView, TouchableOpacity } from 'react-native';
 import { StyledText } from '../components/StyledText';
 import { View } from '../components/Themed';
 import { app } from '../firebase';
 import { fetchingData, optionsUrl, urlById } from '../utils/queries';
 import LottieView from 'lottie-react-native';
 import Loading from '../components/Loading';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
+const screenHeight = Math.round(Dimensions.get('window').height);
 
-export default function FavouritesScreen() {
+export default function FavouritesScreen({ navigation }: any) {
   const [favouritesSelected, setFavouritesSelected] = React.useState<any>([]);
   const [loading, setLoading] = React.useState(false);
+
+  const favourites = favouritesSelected?.map((doc: any) => doc.selected);
 
   //!Get user id from firebase
   const user = getAuth().currentUser;
@@ -30,11 +34,7 @@ export default function FavouritesScreen() {
     );
     //? Filter by user id
     const filteredFavourites = dataFromFirebase.filter((doc: any) => doc.userUid === userId);
-    // const favourites = filteredFavourites.map((doc: any) => doc.selected);
-    // console.log('data from firebase en favourites', favourites);
-    console.log('cantidad de docs', filteredFavourites.length);
-    console.log('cantidad de docs', filteredFavourites);
-    setFavouritesSelected(filteredFavourites[0]);
+    setFavouritesSelected(filteredFavourites);
     setLoading(false);
   };
 
@@ -43,19 +43,31 @@ export default function FavouritesScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      {!favouritesSelected?.selected ? (
-        <View style={{ alignItems: 'center', marginTop: 50 }}>
-          <StyledText big bold color="part">
+    <>
+      {!favourites ? (
+        <View style={{ alignItems: 'center', height: screenHeight }}>
+          <StyledText
+            big
+            bold
+            color="part"
+            style={{
+              marginTop: 50,
+              marginBottom: 20,
+            }}
+          >
             {' '}
             Nothing to show here
           </StyledText>
-          <View style={{
-            width: screenWidth - 100,
-          }}>
-            <StyledText style={{
-              textAlign: 'center',
-            }}>
+          <View
+            style={{
+              width: screenWidth - 100,
+            }}
+          >
+            <StyledText
+              style={{
+                textAlign: 'center',
+              }}
+            >
               Check some exercises and if you like it, give it a like and it will appear here!
             </StyledText>
           </View>
@@ -68,9 +80,32 @@ export default function FavouritesScreen() {
           />
         </View>
       ) : (
-        favouritesSelected.selected.map((id: any) => <FavouriteItem key={id} id={id} />)
+        <ScrollView showsVerticalScrollIndicator={false} style={[{ backgroundColor: '#d3d3d3' }]}>
+          <View style={{ alignItems: 'center', paddingTop: 10 }}>
+            {favourites?.map((id: any) => (
+              <FavouriteItem key={id} id={id} />
+            ))}
+          </View>
+        </ScrollView>
       )}
-    </View>
+      <TouchableOpacity
+        style={{
+          position: 'absolute',
+          bottom: 20,
+          right: 20,
+          width: 50,
+          height: 50,
+          backgroundColor: '#003d7d',
+          borderRadius: 50,
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: 10,
+        }}
+        onPress={() => navigation.navigate('Home')}
+      >
+        <MaterialCommunityIcons name="plus" color="#fff" size={30} />
+      </TouchableOpacity>
+    </>
   );
 }
 
@@ -100,7 +135,7 @@ const Card = ({ item }: any) => {
     <View
       style={{
         width: screenWidth - 40,
-        backgroundColor: '#0057b4c7',
+        backgroundColor: '#8fbff316',
         borderRadius: 10,
         marginVertical: 10,
       }}
@@ -113,10 +148,3 @@ const Card = ({ item }: any) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-});
