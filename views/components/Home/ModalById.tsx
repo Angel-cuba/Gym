@@ -26,11 +26,11 @@ export default function ModalById({ route, navigation }: any) {
   const addWishList = async () => {
     try {
       //? Add a new document with a generated id.
-      // const docRef = await addDoc(collection(db, 'favourites'), {
-      //   userUid: userId,
-      //   selected: id
-      // });
-      // console.log('Document written with ID: ', docRef.id);
+      const docRef = await addDoc(collection(db, 'favourites'), {
+        userUid: userId,
+        selected: id
+      });
+      console.log('Document written with ID: ', docRef.id);
       
       //? Get all documents from a collection
       const dataFromFirebase =  (await getDocs(collection(db, 'favourites'))).docs.map((doc) => doc.data());
