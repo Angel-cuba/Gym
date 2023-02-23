@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
-import Colors from '../constants/Colors';
+import Colors, { BottomHeadersColours } from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import ModalScreen from '../views/ModalScreen';
 import NotFoundScreen from '../views/NotFoundScreen';
@@ -19,13 +19,14 @@ import ProfileScreen from '../views/Profile';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import ModalById from '../views/components/Home/ModalById';
 import Toggle from '../components/toggle/Toggle';
+import { useTheme } from '../context/context';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const [user, setUser] = React.useState(null);
   const auth = getAuth();
 
 
-React.useEffect(() => {
+  React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: any) => {
       if (user) {
         setUser(user);
@@ -35,19 +36,17 @@ React.useEffect(() => {
     });
 
     return unsubscribe;
-}, []);
+  }, []);
 
   return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-    >
+    <NavigationContainer linking={LinkingConfiguration}>
       {!user ? (
         <>
           <Authorization />
         </>
       ) : (
         <>
-          <HomeNavigator/>
+          <HomeNavigator />
         </>
       )}
     </NavigationContainer>
@@ -87,7 +86,8 @@ function HomeNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
+  const { theme } = useTheme();
+
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
@@ -107,6 +107,16 @@ function BottomTabNavigator() {
             }
             return <FontAwesome name={iconName} size={size} color={color} />;
           },
+          tabBarStyle: {
+            backgroundColor:
+              route.name === 'Home'
+                ? BottomHeadersColours.home
+                : route.name === 'Trending'
+                ? BottomHeadersColours.trending
+                : route.name === 'Favourites'
+                ? BottomHeadersColours.favourites
+                : BottomHeadersColours.profile,
+          },
         } as any)
       }
     >
@@ -115,6 +125,7 @@ function BottomTabNavigator() {
         component={HomeScreen}
         options={({ navigation }: RootTabScreenProps<'Home'>) => ({
           title: 'Home',
+          headerTintColor: theme === 'light' ? Colors.dark.text : Colors.light.text,
           headerRight: () => (
             <Pressable
               onPress={() => navigation.navigate('Modal')}
@@ -125,14 +136,16 @@ function BottomTabNavigator() {
               <FontAwesome
                 name="cart-plus"
                 size={25}
-                color={Colors[colorScheme].text}
+                color={Colors.dark.text}
                 style={{ marginRight: 15 }}
               />
             </Pressable>
           ),
-          headerLeft: () => (
-            <Toggle/>
-          ),
+          headerLeft: () => <Toggle />,
+          tabBarActiveTintColor: BottomHeadersColours.home,
+          headerStyle: {
+            backgroundColor: BottomHeadersColours.home,
+          },
         })}
       />
       <BottomTab.Screen
@@ -140,6 +153,11 @@ function BottomTabNavigator() {
         component={FavouritesScreen}
         options={{
           title: 'Favourites',
+          headerTintColor: theme === 'light' ? Colors.dark.text : Colors.light.text,
+          tabBarActiveTintColor: BottomHeadersColours.favourites,
+          headerStyle: {
+            backgroundColor: BottomHeadersColours.favourites,
+          },
         }}
       />
       <BottomTab.Screen
@@ -147,6 +165,11 @@ function BottomTabNavigator() {
         component={TrendingScreen}
         options={{
           title: 'Trending',
+          headerTintColor: theme === 'light' ? Colors.dark.text : Colors.light.text,
+          tabBarActiveTintColor: BottomHeadersColours.trending,
+          headerStyle: {
+            backgroundColor: BottomHeadersColours.trending,
+          },
         }}
       />
       <BottomTab.Screen
@@ -154,6 +177,11 @@ function BottomTabNavigator() {
         component={ProfileScreen}
         options={{
           title: 'Profile',
+          headerTintColor: theme === 'light' ? Colors.dark.text : Colors.light.text,
+          tabBarActiveTintColor: BottomHeadersColours.profile,
+          headerStyle: {
+            backgroundColor: BottomHeadersColours.profile,
+          },
         }}
       />
     </BottomTab.Navigator>
