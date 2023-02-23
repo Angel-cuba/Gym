@@ -3,10 +3,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { ColorSchemeName, Pressable } from 'react-native';
+import { ColorSchemeName, Pressable, View } from 'react-native';
 
-import Colors, { BottomHeadersColours } from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
+import Colors, { BottomHeadersColours, InactiveColor } from '../constants/Colors';
 import ModalScreen from '../views/ModalScreen';
 import NotFoundScreen from '../views/NotFoundScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
@@ -24,7 +23,6 @@ import { useTheme } from '../context/context';
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const [user, setUser] = React.useState(null);
   const auth = getAuth();
-
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: any) => {
@@ -127,13 +125,23 @@ function BottomTabNavigator() {
           tabBarStyle: {
             backgroundColor:
               route.name === 'Home'
-                ? BottomHeadersColours.home
+                ? BottomHeadersColours.bg.home
                 : route.name === 'Trending'
-                ? BottomHeadersColours.trending
+                ? BottomHeadersColours.bg.trending
                 : route.name === 'Favourites'
-                ? BottomHeadersColours.favourites
-                : BottomHeadersColours.profile,
+                ? BottomHeadersColours.bg.favourites
+                : BottomHeadersColours.bg.profile,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            borderBottomLeftRadius: 25,
+            borderBottomRightRadius: 25,
+            height: 50,
+            marginHorizontal: 10,
+            position: 'absolute',
+            bottom: 20,
           },
+          tabBarInactiveTintColor: InactiveColor,
+          tabBarShowLabel: false,
         } as any)
       }
     >
@@ -159,9 +167,9 @@ function BottomTabNavigator() {
             </Pressable>
           ),
           headerLeft: () => <Toggle />,
-          tabBarActiveTintColor: BottomHeadersColours.home,
+          tabBarActiveTintColor: BottomHeadersColours.icon.home,
           headerStyle: {
-            backgroundColor: BottomHeadersColours.home,
+            backgroundColor: BottomHeadersColours.header.home,
           },
         })}
       />
@@ -171,9 +179,9 @@ function BottomTabNavigator() {
         options={{
           title: 'Favourites',
           headerTintColor: theme === 'light' ? Colors.dark.text : Colors.light.text,
-          tabBarActiveTintColor: BottomHeadersColours.favourites,
+          tabBarActiveTintColor: BottomHeadersColours.icon.favourites,
           headerStyle: {
-            backgroundColor: BottomHeadersColours.favourites,
+            backgroundColor: BottomHeadersColours.header.favourites,
           },
         }}
       />
@@ -183,9 +191,9 @@ function BottomTabNavigator() {
         options={{
           title: 'Trending',
           headerTintColor: theme === 'light' ? Colors.dark.text : Colors.light.text,
-          tabBarActiveTintColor: BottomHeadersColours.trending,
+          tabBarActiveTintColor: BottomHeadersColours.icon.trending,
           headerStyle: {
-            backgroundColor: BottomHeadersColours.trending,
+            backgroundColor: BottomHeadersColours.header.trending,
           },
         }}
       />
@@ -195,9 +203,9 @@ function BottomTabNavigator() {
         options={{
           title: 'Profile',
           headerTintColor: theme === 'light' ? Colors.dark.text : Colors.light.text,
-          tabBarActiveTintColor: BottomHeadersColours.profile,
+          tabBarActiveTintColor: BottomHeadersColours.icon.profile,
           headerStyle: {
-            backgroundColor: BottomHeadersColours.profile,
+            backgroundColor: BottomHeadersColours.header.profile,
           },
         }}
       />
