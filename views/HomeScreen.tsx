@@ -1,6 +1,6 @@
 import { getAuth, signOut } from 'firebase/auth';
 import React from 'react';
-import { Dimensions, FlatList, StyleSheet } from 'react-native';
+import { ColorSchemeName, Dimensions, FlatList, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { StyledText } from '../components/StyledText';
 import { View } from '../components/Themed';
@@ -13,14 +13,31 @@ import ButtonParts from './components/Home/ButtonParts';
 // Url and options for the fetch request
 import { fetchingData, optionsUrl, urlBodyParts, urlBodyPartsToFetch } from '../utils/queries';
 import Loading from '../components/Loading';
+import { useTheme } from '../context/context';
 
 
 
 export default function HomeScreen() {
+  const { theme } = useTheme()
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: theme === 'light' ? '#000' : '#fff',
+    },
+      bodypart: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 55, 81, 0.022)',
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    paddingHorizontal: 5,
+  },
+  });
 
   const auth = getAuth(app);
   const goOut = () => {
-    console.log('go out');
     signOut(auth);
   };
 
@@ -30,11 +47,19 @@ export default function HomeScreen() {
   const [loading, setLoading] = React.useState(false);
   //TODO: add error state
   const [error, setError] = React.useState(false);
+  const [themeValue, setThemeValue] = React.useState('dark');
+
 
   const screenWidth = Math.round(Dimensions.get('window').width);
   const screenHeight = Math.round(Dimensions.get('window').height);
 
- 
+ const switchTheme: any = () => {
+  if (themeValue === 'dark') {
+    setThemeValue('light');
+  } else {
+    setThemeValue('dark');
+  }
+};
 
   React.useEffect(() => {
     fetchingData(urlBodyParts, optionsUrl).then((data) => {
