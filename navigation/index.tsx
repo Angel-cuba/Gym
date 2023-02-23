@@ -18,10 +18,13 @@ import TrendingScreen from '../views/Trending';
 import ProfileScreen from '../views/Profile';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import ModalById from '../views/components/Home/ModalById';
+import Toggle from '../components/toggle/Toggle';
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const [user, setUser] = React.useState(null);
   const auth = getAuth();
+
+
 React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: any) => {
       if (user) {
@@ -37,20 +40,16 @@ React.useEffect(() => {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
     >
       {!user ? (
         <>
           <Authorization />
-          {/* <RootNavigator /> */}
         </>
       ) : (
         <>
-          <HomeNavigator />
+          <HomeNavigator/>
         </>
       )}
-
-      {/* <RootNavigator /> */}
     </NavigationContainer>
   );
 }
@@ -89,7 +88,6 @@ const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
@@ -131,6 +129,9 @@ function BottomTabNavigator() {
                 style={{ marginRight: 15 }}
               />
             </Pressable>
+          ),
+          headerLeft: () => (
+            <Toggle/>
           ),
         })}
       />
