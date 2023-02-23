@@ -1,6 +1,6 @@
 import { getAuth, signOut } from 'firebase/auth';
 import React from 'react';
-import { ColorSchemeName, Dimensions, FlatList, StyleSheet } from 'react-native';
+import { ColorSchemeName, Dimensions, FlatList, SafeAreaView, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import { StyledText } from '../components/StyledText';
 import { View } from '../components/Themed';
@@ -14,6 +14,7 @@ import ButtonParts from './components/Home/ButtonParts';
 import { fetchingData, optionsUrl, urlBodyParts, urlBodyPartsToFetch } from '../utils/queries';
 import Loading from '../components/Loading';
 import { useTheme } from '../context/context';
+import Colors from '../constants/Colors';
 
 export default function HomeScreen() {
   const { theme } = useTheme();
@@ -47,30 +48,29 @@ export default function HomeScreen() {
 
   const styles = StyleSheet.create({
     container: {
-      flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
     },
     bodypart: {
       justifyContent: 'center',
       alignItems: 'center',
-      backgroundColor: 'rgba(0, 55, 81, 0.022)',
+      backgroundColor: theme === 'light' ? Colors.dark.bgList : Colors.light.bgList,
       borderTopLeftRadius: 30,
       borderTopRightRadius: 30,
       paddingHorizontal: 5,
     },
     mainBg: {
-      backgroundColor: theme === 'light' ? '#000' : '#fff',
+      backgroundColor: theme === 'light' ? Colors.dark.bgList : Colors.light.bgList,
     },
   });
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView>
+      <View style={styles.container}>
       <Button onPress={goOut}>Log out</Button>
       <View
         style={{
           flexDirection: 'row',
-          marginTop: 50,
         }}
       >
         <FlatList
@@ -90,17 +90,18 @@ export default function HomeScreen() {
       <View
  
       >
-        <View style={[styles.bodypart, { width: screenWidth, height: screenHeight - 200 }]}>
+        <View style={[styles.bodypart, { width: screenWidth, height: screenHeight }]}>
+          {/* -200 */}
           <FlatList
             data={gymData}
             renderItem={({ item }) => <BodyPartItem item={item as BodyPart} />}
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
             numColumns={2}
-            style={styles.mainBg}
           />
         </View>
       </View>
-    </View>
+      </View>
+    </SafeAreaView>
   );
 }
