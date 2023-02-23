@@ -8,12 +8,21 @@ export default {
     tint: tintColorLight,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorLight,
+    bgList: '#00142517',
   },
   dark: {
-    text: '#fff',
+    text: '#d3d3d3',
     background: '#000',
     tint: tintColorDark,
     tabIconDefault: '#ccc',
     tabIconSelected: tintColorDark,
+    bgList: '#0014258F',
   },
+};
+
+export const BottomHeadersColours = {
+  home: '#CE3A009B',
+  favourites: '#027CE7DF',
+  trending: '#5A5A5A',
+  profile: '#6D5600C9',
 };
