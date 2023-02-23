@@ -105,7 +105,24 @@ function BottomTabNavigator() {
             } else if (route.name === 'Profile') {
               iconName = 'cog';
             }
-            return <FontAwesome name={iconName} size={size} color={color} />;
+            return <View style={{
+              position: 'absolute',
+              bottom: -30,
+              width: 80,
+              height: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
+              shadowColor: route.name === 'Home'
+                ? BottomHeadersColours.bg.home
+                : route.name === 'Trending'
+                ? BottomHeadersColours.bg.trending
+                : route.name === 'Favourites'
+                ? BottomHeadersColours.bg.favourites
+                : BottomHeadersColours.bg.profile,
+              elevation: 5,
+            }}>
+              <FontAwesome name={iconName} size={size} color={color} />
+            </View>;
           },
           tabBarStyle: {
             backgroundColor:
