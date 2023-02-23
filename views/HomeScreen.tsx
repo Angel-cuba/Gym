@@ -15,26 +15,8 @@ import { fetchingData, optionsUrl, urlBodyParts, urlBodyPartsToFetch } from '../
 import Loading from '../components/Loading';
 import { useTheme } from '../context/context';
 
-
-
 export default function HomeScreen() {
-  const { theme } = useTheme()
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: theme === 'light' ? '#000' : '#fff',
-    },
-      bodypart: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 55, 81, 0.022)',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 5,
-  },
-  });
+  const { theme } = useTheme();
 
   const auth = getAuth(app);
   const goOut = () => {
@@ -47,19 +29,9 @@ export default function HomeScreen() {
   const [loading, setLoading] = React.useState(false);
   //TODO: add error state
   const [error, setError] = React.useState(false);
-  const [themeValue, setThemeValue] = React.useState('dark');
-
 
   const screenWidth = Math.round(Dimensions.get('window').width);
   const screenHeight = Math.round(Dimensions.get('window').height);
-
- const switchTheme: any = () => {
-  if (themeValue === 'dark') {
-    setThemeValue('light');
-  } else {
-    setThemeValue('dark');
-  }
-};
 
   React.useEffect(() => {
     fetchingData(urlBodyParts, optionsUrl).then((data) => {
@@ -71,7 +43,26 @@ export default function HomeScreen() {
     });
   }, [bodyParts]);
 
-  if (loading) return <Loading/>;
+  if (loading) return <Loading />;
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    bodypart: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 55, 81, 0.022)',
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      paddingHorizontal: 5,
+    },
+    mainBg: {
+      backgroundColor: theme === 'light' ? '#000' : '#fff',
+    },
+  });
 
   return (
     <View style={styles.container}>
@@ -79,6 +70,7 @@ export default function HomeScreen() {
       <View
         style={{
           flexDirection: 'row',
+          marginTop: 50,
         }}
       >
         <FlatList
@@ -89,52 +81,26 @@ export default function HomeScreen() {
           keyExtractor={(item) => item}
           horizontal
           showsHorizontalScrollIndicator={false}
+          style={styles.mainBg}
         />
       </View>
-      <StyledText color="part" bold>
-        {
-          gymData.lenght > 0
-            ? `We got ${gymData.length} differents exercises for you!`
-            : 'No exercises found'
-        }
+      <StyledText color="part" bold style={{margin: 10}}>
+        {gymData ? `We got ${gymData.length} differents exercises for you!` : 'No exercises found'}
       </StyledText>
       <View
-        style={{
-          flexDirection: 'row',
-        }}
+ 
       >
-        <View
-          style={[styles.bodypart, { width: screenWidth, height: screenHeight - 200 }]}
-        >
+        <View style={[styles.bodypart, { width: screenWidth, height: screenHeight - 200 }]}>
           <FlatList
             data={gymData}
             renderItem={({ item }) => <BodyPartItem item={item as BodyPart} />}
             keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
             numColumns={2}
+            style={styles.mainBg}
           />
         </View>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-  bodypart: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 55, 81, 0.022)',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 5,
-  },
-});
