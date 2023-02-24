@@ -7,7 +7,7 @@ import { View } from '../components/Themed';
 import { app } from '../firebase';
 import { fetchingData, optionsUrl, urlById } from '../utils/queries';
 import LottieView from 'lottie-react-native';
-import Loading from '../components/Loading';
+import Loading from '../components/loading/Loading';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
